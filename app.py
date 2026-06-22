@@ -10,7 +10,7 @@ from langchain_core.messages import AIMessage, HumanMessage
 
 from ravan_companion.config import require_api_key
 from ravan_companion.graph import build_graph
-from ravan_companion.profile import PROFILE
+from ravan_companion.profile import avoid, recommended, summary
 
 st.set_page_config(page_title="Ravan AI Companion", page_icon="🦠")
 st.title("🦠 Ravan — Gut Microbiome Companion")
@@ -37,11 +37,13 @@ if "messages" not in st.session_state:
 # --- Sidebar: profile snapshot + quick actions ---------------------------------
 with st.sidebar:
     st.header("Your profile")
-    st.caption(PROFILE["summary"])
-    st.markdown("**Increase:** " + ", ".join(PROFILE["modifiers"]["increase"]))
-    st.markdown("**Reduce:** " + ", ".join(PROFILE["modifiers"]["reduce"]))
-    if PROFILE.get("restrictions"):
-        st.markdown("**Restrictions:** " + ", ".join(PROFILE["restrictions"]))
+    st.caption(summary())
+
+    def _names(items: list) -> str:
+        return ", ".join(s["name"] for s in items)
+
+    st.markdown("**Top to favour:** " + _names(recommended(8)))
+    st.markdown("**Top to limit:** " + _names(avoid(8)))
 
     st.divider()
     st.header("Quick actions")

@@ -25,14 +25,14 @@ _ROUTES: dict[str, tuple[tuple[str, ...], str]] = {
     "grocery": (
         ("grocery", "groceries", "shopping list", "shop", "supermarket", "buy"),
         "The user wants a shopping list. Produce a categorised list (produce, "
-        "pantry, fridge, etc.) of foods that push their suggested modifiers in "
-        "the right direction.",
+        "pantry, fridge, etc.) of foods that lean on their recommended modifiers "
+        "and steer clear of the ones to limit or avoid.",
     ),
     "recipe": (
         ("recipe", "cook", "make for dinner", "how do i make", "meal"),
         "The user wants to cook. Give a complete recipe — ingredients with "
-        "quantities, then numbered steps — biased toward their 'increase' "
-        "modifiers and away from the 'reduce' ones.",
+        "quantities, then numbered steps — biased toward their recommended "
+        "modifiers and away from the ones to limit or avoid.",
     ),
     "substitution": (
         ("substitute", "swap", "replace", "instead of", "don't like", "alternative"),
