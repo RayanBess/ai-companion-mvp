@@ -23,11 +23,29 @@ def require_api_key() -> str:
     The graph and the Streamlit app both call this so the user gets a single,
     actionable message ("add your key to .env") instead of an opaque 401.
     """
-    key = os.getenv("ANTHROPIC_API_KEY", "").strip()
+    key = _get_api_key().strip()
     if not key or key == "your-api-key-here":
         raise RuntimeError(
-            "ANTHROPIC_API_KEY is not set. Copy .env.example to .env and add "
-            "your Anthropic API key (get one at "
-            "https://console.anthropic.com/settings/keys)."
+            "ANTHROPIC_API_KEY is not set. Locally, copy .env.example to .env "
+            "and add your key. On Streamlit Cloud, add it under "
+            "Settings -> Secrets. Get a key at "
+            "https://console.anthropic.com/settings/keys."
         )
     return key
+
+
+def _get_api_key() -> str:
+    """Read the key from Streamlit secrets if available, else env vars.
+
+    On Streamlit Cloud the key lives in the Secrets manager; locally it
+    comes from a .env file. Importing streamlit is optional so the graph
+    can run outside a Streamlit context (e.g. tests, CLI).
+    """
+    try:
+        import streamlit as st
+
+        if "ANTHROPIC_API_KEY" in st.secrets:
+            return st.secrets["ANTHROPIC_API_KEY"]
+    except Exception:
+        pass
+    return os.getenv("ANTHROPIC_API_KEY", "")
